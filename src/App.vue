@@ -1,12 +1,28 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-      <div>
-        <div>
-            <h2>Who is coming?</h2>
-            <input type="text">
-            <span>Well done! The safe places are: </span>
-        </div>
+      <div id='example-3'>
+      <input type="checkbox" id="john" value="John" v-model="checkedNames">
+      <label for="john">John Davis</label>
+      <input type="checkbox" id="gary" value="Gary" v-model="checkedNames">
+      <label for="gary">Gary Jones</label>
+      <input type="checkbox" id="robert" value="Robert" v-model="checkedNames">
+      <label for="robert">Robert Webb</label>
+      <input type="checkbox" id="gavin" value="Gavin" v-model="checkedNames">
+      <label for="gavin">Gavin Coulson</label>
+      <input type="checkbox" id="alan" value="Alan" v-model="checkedNames">
+      <label for="allan">Alan Allen</label>
+      <input type="checkbox" id="bobby" value="Bobby" v-model="checkedNames">
+      <label for="bobby">Bobby Robson</label>
+      <input type="checkbox" id="david" value="David" v-model="checkedNames">
+      <label for="david">David Lang</label>
+      <br>
+      <p>People who are coming:</p>
+      <div v-for="name in checkedNames"> {{name}} </div>
+    
+      <button>Find venues to avoid</button>
+
+      <div></div>
     </div>
   </div>
 </template>
@@ -22,6 +38,9 @@ export default {
 
   data() {
     return {
+
+      checkedNames: [], 
+
         users: [
           {
               "name": "John Davis",
@@ -112,49 +131,65 @@ export default {
   },
 
   created() {
-    let recomendations = [];
-      for(var i = 0; i < this.users.length; i++) {
-        for(var j = 0; j < this.venues.length; j++) {
-          recomendations.push(this.canEatAndDrinkInVenue(this.users[i],this.venues[j]));
-        }
-        
-      }
-
-        console.log("THIS IS THE ARRAY OF RECOMENDATIONS", recomendations)
+    let recommendations = this.createArrayOfRecommendations();
+     this.tellMeVenueToAvoid() 
   },
 
   methods: {
-      canEatAndDrinkInVenue(user,venue) {
-        const canEat = this.canEatInVenue(user.wont_eat, venue.food);
-        const canDrink = this.canDrinkInVenue(user.drinks, venue.drinks);
-        return this.createRecomendationForUser(this.users, canEat, canDrink)
+
+    createArrayOfRecommendations() {
+      let recommendations = [];
+      for(var i = 0; i < this.users.length; i++) {
+        for(var j = 0; j < this.venues.length; j++) {
+          recommendations.push(this.canEatAndDrinkInVenue(this.users[i],this.venues[j]));
+        }
+        
+      }
+      return recommendations
    
     },
 
-    createRecomendationForUser(user, canEat, canDrink) {
+    tellMeVenueToAvoid() {
+      let recommendations = this.createArrayOfRecommendations();
+      console.log("THIS IS MY ARRAYYYYYYYYYYYYYYYYYYYYYYYYYY", recommendations);
+      console.log()
+    },
+
+
+      canEatAndDrinkInVenue(user,venue) {
+        const canEat = this.canEatInVenue(user.wont_eat, venue.food);
+        const canDrink = this.canDrinkInVenue(user.drinks, venue.drinks);
+        return this.createRecommendationForUser(user, canEat, canDrink, venue)
+   
+    },
+
+    createRecommendationForUser(user, canEat, canDrink, venue) {
   
-      let recomendation = {};
+      let recommendation = {};
 
-      recomendation.canGo = canEat && canDrink;
+      recommendation.canGo = canEat && canDrink;
+      recommendation.name = `${user.name}`;
+       recommendation.venue = `${venue.name}`;
+     
 
-      if (!recomendation.canGo) {
+
+      if (!recommendation.canGo) {
         if(!canEat) {
-          recomendation.reason = `Theres is nothing for ${user.name} to eat`;
+          recommendation.reason = `Theres is nothing for ${user.name} to eat`;
         } else if (!canDrink) {
-          recomendation.reason = `There is nothing for ${user.name} to drink`;
+          recommendation.reason = `There is nothing for ${user.name} to drink`;
         } else {
-          recomendation.reason = `There is nothing for ${user.name} to drink or eat`;
+          recommendation.reason = `There is nothing for ${user.name} to drink or eat`;
         }
       }
-      return recomendation;
+      return recommendation;
     },
     
 
     canEatInVenue(wontEat, food) {
-        const canEat = wontEat.some(foodElement => !food.includes(foodElement));
-        // para el array userDrinks dame ALGUN (some) elemento que este incluido en el array venueDrinks
-        console.log("THIS IS THE CAN EAT", canEat)
-        console.log(`can eat in venue ${canEat}!! because ${food} contains at least one element that is not in ${wontEat}`);
+          const canEat = food.some(foodItem => !wontEat.includes(foodItem));
+        // para el array userWont_Eat dame ALGUN (some) elemento que no este incluido en el array venueFood
+       console.log(`can eat in venue ${canEat}!! because ${food} contains at least one element that is not in ${wontEat}`);
       return canEat;
     },
 
