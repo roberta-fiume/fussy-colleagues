@@ -132,7 +132,11 @@ export default {
 
   created() {
     let recommendations = this.createArrayOfRecommendations();
-     this.tellMeVenueToAvoid() 
+ 
+      let placesToAvoid = this.tellMeVenueToAvoid(recommendations.canGo, recommendations.name, recommendations.venue, recommendations.reason);
+   
+     
+     console.log("THESE ARE THE PLACES TO AVOID", placesToAvoid)
   },
 
   methods: {
@@ -149,11 +153,33 @@ export default {
    
     },
 
-    tellMeVenueToAvoid() {
-      let recommendations = this.createArrayOfRecommendations();
-      console.log("THIS IS MY ARRAYYYYYYYYYYYYYYYYYYYYYYYYYY", recommendations);
-      console.log()
-    },
+    tellMeVenueToAvoid(canGo, name, venue, reason) {
+        let recommendations = this.createArrayOfRecommendations();
+        console.log("THIS IS MY ARRAYYYYYYYYYYYYYYYYYYYYYYYYYY", recommendations);
+          for (var i of recommendations) {
+            if (i.canGo == false) {
+              console.log("THIS I I.CANGO", i.canGo)
+            var placesToAvoid = {};
+            placesToAvoid.name = i.name;
+            placesToAvoid.venue = i.venue;
+             placesToAvoid.reason = i.reason;
+          }
+         }
+          return placesToAvoid;
+      },
+
+      
+    // tellMeVenueToAvoid(canGo, name, venue, reason) {
+    //     let recommendations = this.createArrayOfRecommendations();
+    //     console.log("THIS IS MY ARRAYYYYYYYYYYYYYYYYYYYYYYYYYY", recommendations);
+    //     let placesToAvoid = [];
+    //    for (var i of recommendations) {
+    //       if (i.canGo == false) {
+    //         placesToAvoid.push(i.name, i.venue, i.reason);
+    //       }
+    //     }
+    //       return placesToAvoid;
+    //   },
 
 
       canEatAndDrinkInVenue(user,venue) {
@@ -170,9 +196,7 @@ export default {
       recommendation.canGo = canEat && canDrink;
       recommendation.name = `${user.name}`;
        recommendation.venue = `${venue.name}`;
-     
-
-
+    
       if (!recommendation.canGo) {
         if(!canEat) {
           recommendation.reason = `Theres is nothing for ${user.name} to eat`;
@@ -189,13 +213,13 @@ export default {
     canEatInVenue(wontEat, food) {
           const canEat = food.some(foodItem => !wontEat.includes(foodItem));
         // para el array userWont_Eat dame ALGUN (some) elemento que no este incluido en el array venueFood
-       console.log(`can eat in venue ${canEat}!! because ${food} contains at least one element that is not in ${wontEat}`);
+      //  console.log(`can eat in venue ${canEat}!! because ${food} contains at least one element that is not in ${wontEat}`);
       return canEat;
     },
 
     canDrinkInVenue(userDrinks, venueDrinks) {
       const canDrink = userDrinks.some(drinkElement => venueDrinks.includes(drinkElement));
-      console.log(`can drink in venue ${canDrink}!! because ${venueDrinks} contains at least one element of ${userDrinks}`);
+      // console.log(`can drink in venue ${canDrink}!! because ${venueDrinks} contains at least one element of ${userDrinks}`);
       return canDrink;
     }, 
   }
