@@ -2,19 +2,19 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
       <div id='example-3'>
-      <input type="checkbox" id="john" value="John" v-model="checkedNames">
+      <input type="checkbox" id="john" value="John Davis" v-model="checkedNames">
       <label for="john">John Davis</label>
-      <input type="checkbox" id="gary" value="Gary" v-model="checkedNames">
+      <input type="checkbox" id="gary" value="Gary Jones" v-model="checkedNames">
       <label for="gary">Gary Jones</label>
-      <input type="checkbox" id="robert" value="Robert" v-model="checkedNames">
+      <input type="checkbox" id="robert" value="Robert Webb" v-model="checkedNames">
       <label for="robert">Robert Webb</label>
-      <input type="checkbox" id="gavin" value="Gavin" v-model="checkedNames">
+      <input type="checkbox" id="gavin" value="Gavin Coulson" v-model="checkedNames">
       <label for="gavin">Gavin Coulson</label>
-      <input type="checkbox" id="alan" value="Alan" v-model="checkedNames">
+      <input type="checkbox" id="alan" value="Alan  Allen" v-model="checkedNames">
       <label for="allan">Alan Allen</label>
-      <input type="checkbox" id="bobby" value="Bobby" v-model="checkedNames">
+      <input type="checkbox" id="bobby" value="Bobby Robson" v-model="checkedNames">
       <label for="bobby">Bobby Robson</label>
-      <input type="checkbox" id="david" value="David" v-model="checkedNames">
+      <input type="checkbox" id="david" value="David Lang" v-model="checkedNames">
       <label for="david">David Lang</label>
       <br>
       <p>People who are coming:</p>
@@ -139,6 +139,14 @@ export default {
      console.log("THESE ARE THE PLACES TO AVOID", placesToAvoid)
   },
 
+  updated() {
+    var peopleWhoCome = this.usersWhoComeObj();
+      console.log("PEOPLE WHO COMEEE", peopleWhoCome); 
+
+      var filterd = this.filterUsers();
+      console.log("filteredddd",filterd)
+  },
+ 
   methods: {
 
     createArrayOfRecommendations() {
@@ -153,44 +161,103 @@ export default {
    
     },
 
-    tellMeVenueToAvoid(canGo, name, venue, reason) {
-        let recommendations = this.createArrayOfRecommendations();
-        console.log("THIS IS MY ARRAYYYYYYYYYYYYYYYYYYYYYYYYYY", recommendations);
-          for (var i of recommendations) {
-            if (i.canGo == false) {
-              console.log("THIS I I.CANGO", i.canGo)
-            var placesToAvoid = {};
-            placesToAvoid.name = i.name;
-            placesToAvoid.venue = i.venue;
-             placesToAvoid.reason = i.reason;
-          }
-         }
-          return placesToAvoid;
-      },
 
-      
-    // tellMeVenueToAvoid(canGo, name, venue, reason) {
-    //     let recommendations = this.createArrayOfRecommendations();
-    //     console.log("THIS IS MY ARRAYYYYYYYYYYYYYYYYYYYYYYYYYY", recommendations);
-    //     let placesToAvoid = [];
-    //    for (var i of recommendations) {
-    //       if (i.canGo == false) {
-    //         placesToAvoid.push(i.name, i.venue, i.reason);
-    //       }
-    //     }
-    //       return placesToAvoid;
-    //   },
+      // tellMeVenueToAvoid(canGo, name, venue, reason) {
+      //   let recommendations = this.createArrayOfRecommendations();
+      //     recommendations.forEach(recommendation => {
+      //       if (recommendation.canGo == false) {
+      //         var placesToAvoid = {};
+      //         placesToAvoid.name = recommendation.name;
+      //         placesToAvoid.venue = recommendation.venue;
+      //         placesToAvoid.reason = recommendation.reason;
+      //       });
+            
+      //       return placesToAvoid
+            
+      // },
+
+          tellMeVenueToAvoid(canGo, name, venue, reason) {
+              let recommendations = this.createArrayOfRecommendations();
+              console.log("THIS IS MY ARRAYYYYYYYYYYYYYYYYYYYYYYYYYY", recommendations);
+                for (var i of recommendations) {
+                  if (i.canGo == false) {
+                    console.log("THIS I I.CANGO", i.canGo)
+                  var placesToAvoid = {};
+                  placesToAvoid.name = i.name;
+                  placesToAvoid.venue = i.venue;
+                   placesToAvoid.reason = i.reason;
+                }
+               }
+                return placesToAvoid;
+            },
+
+            
+          // tellMeVenueToAvoid(canGo, name, venue, reason) {
+          //     let recommendations = this.createArrayOfRecommendations();
+          //     console.log("THIS IS MY ARRAYYYYYYYYYYYYYYYYYYYYYYYYYY", recommendations);
+          //     let placesToAvoid = [];
+          //    for (var i of recommendations) {
+          //       if (i.canGo == false) {
+          //         placesToAvoid.push(i.name, i.venue, i.reason);
+          //       }
+          //     }
+          //       return placesToAvoid;
+          //   },
 
 
       canEatAndDrinkInVenue(user,venue) {
         const canEat = this.canEatInVenue(user.wont_eat, venue.food);
         const canDrink = this.canDrinkInVenue(user.drinks, venue.drinks);
-        return this.createRecommendationForUser(user, canEat, canDrink, venue)
-   
+        let recommendation = this.createRecommendationForUser(user, canEat, canDrink, venue);
+        console.log("THIS IS THE RECCOMENDATION", recommendation)
+        return recommendation 
+    },
+
+     usersWhoComeObj() {
+       let names = [];
+        for (var i of this.checkedNames) {
+          var peopleWhoCome = {};
+           peopleWhoCome.name = i;
+           names.push(peopleWhoCome);
+        }
+
+        return names;  
+    },
+
+    filterUsers() {
+      var peopleWhoCome = this.usersWhoComeObj();
+      let newArray= [];
+      this.users.map(function(obj, index){
+        for(var i of peopleWhoCome) {
+           if(obj.name === i.name){
+             console.log("I AM THE OBJJJ", obj)
+               console.log("I AM i nameee",  i.name)
+            newArray.push(obj);
+          }
+        }
+         
+      });
+        return this.users = newArray;
+        
+            //   var peopleWhoCome = this.usersWhoComeObj();
+            //   for (var i of this.users) {
+            //     for (var j of peopleWhoCome) {
+            //       this.users.filter(function(person) {
+            //         person.name != "Allan Allen"
+            //           console.log("PERSOOON of iiiiii", person)
+            //             console.log("PERSOOON of jjjjj", j.name )
+                
+            //       })
+            //     }
+                
+            //   }
+
+            //  return this.users
+    
     },
 
     createRecommendationForUser(user, canEat, canDrink, venue) {
-  
+     
       let recommendation = {};
 
       recommendation.canGo = canEat && canDrink;
