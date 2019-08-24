@@ -143,8 +143,8 @@ export default {
     var peopleWhoCome = this.usersWhoComeObj();
       console.log("PEOPLE WHO COMEEE", peopleWhoCome); 
 
-      var filterd = this.filterUsers();
-      console.log("filteredddd",filterd)
+      var selectedNames = this.selctedNames();
+      console.log("namesss",selectedNames)
   },
  
   methods: {
@@ -209,7 +209,6 @@ export default {
         const canEat = this.canEatInVenue(user.wont_eat, venue.food);
         const canDrink = this.canDrinkInVenue(user.drinks, venue.drinks);
         let recommendation = this.createRecommendationForUser(user, canEat, canDrink, venue);
-        console.log("THIS IS THE RECCOMENDATION", recommendation)
         return recommendation 
     },
 
@@ -224,36 +223,19 @@ export default {
         return names;  
     },
 
-    filterUsers() {
+    selctedNames() {
       var peopleWhoCome = this.usersWhoComeObj();
       let newArray= [];
-      this.users.map(function(obj, index){
+      this.users.forEach(function(obj){
         for(var i of peopleWhoCome) {
-           if(obj.name === i.name){
-             console.log("I AM THE OBJJJ", obj)
-               console.log("I AM i nameee",  i.name)
+          if(obj.name === i.name){  
             newArray.push(obj);
+            console.log("THIS THE NEW ARRAY", newArray)
           }
-        }
-         
+          console.log("THIS THE NEW ARRAY 2222", newArray)
+        }       
       });
         return this.users = newArray;
-        
-            //   var peopleWhoCome = this.usersWhoComeObj();
-            //   for (var i of this.users) {
-            //     for (var j of peopleWhoCome) {
-            //       this.users.filter(function(person) {
-            //         person.name != "Allan Allen"
-            //           console.log("PERSOOON of iiiiii", person)
-            //             console.log("PERSOOON of jjjjj", j.name )
-                
-            //       })
-            //     }
-                
-            //   }
-
-            //  return this.users
-    
     },
 
     createRecommendationForUser(user, canEat, canDrink, venue) {
