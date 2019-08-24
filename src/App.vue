@@ -131,22 +131,13 @@ export default {
     }
   },
 
-  created() {
-  
-  },
-
   updated() {
     var names = this.usersWhoComeObj();
       console.log("PEOPLE WHO COMEEE", names); 
-
     var selectedNames = this.selectedNames();
       console.log("namesss", selectedNames)
-
     let recommendations = this.createArrayOfRecommendations();
- 
     let placesToAvoid = this.tellMeVenueToAvoid(recommendations.canGo, recommendations.name, recommendations.venue, recommendations.reason);
-   
-     
      console.log("THESE ARE THE PLACES TO AVOID", placesToAvoid)
   },
  
@@ -166,48 +157,22 @@ export default {
     },
 
 
-      // tellMeVenueToAvoid(canGo, name, venue, reason) {
-      //   let recommendations = this.createArrayOfRecommendations();
-      //     recommendations.forEach(recommendation => {
-      //       if (recommendation.canGo == false) {
-      //         var placesToAvoid = {};
-      //         placesToAvoid.name = recommendation.name;
-      //         placesToAvoid.venue = recommendation.venue;
-      //         placesToAvoid.reason = recommendation.reason;
-      //       });
-            
-      //       return placesToAvoid
-            
-      // },
-
-          tellMeVenueToAvoid(canGo, name, venue, reason) {
-              let recommendations = this.createArrayOfRecommendations();
-              console.log("THIS IS MY ARRAYYYYYYYYYYYYYYYYYYYYYYYYYY", recommendations);
-                for (var i of recommendations) {
-                  if (i.canGo == false) {
-                    console.log("THIS I I.CANGO", i.canGo)
-                  var placesToAvoid = {};
-                  placesToAvoid.name = i.name;
-                  placesToAvoid.venue = i.venue;
-                   placesToAvoid.reason = i.reason;
-                }
-               }
-                return placesToAvoid;
-            },
-
-            
-          // tellMeVenueToAvoid(canGo, name, venue, reason) {
-          //     let recommendations = this.createArrayOfRecommendations();
-          //     console.log("THIS IS MY ARRAYYYYYYYYYYYYYYYYYYYYYYYYYY", recommendations);
-          //     let placesToAvoid = [];
-          //    for (var i of recommendations) {
-          //       if (i.canGo == false) {
-          //         placesToAvoid.push(i.name, i.venue, i.reason);
-          //       }
-          //     }
-          //       return placesToAvoid;
-          //   },
-
+    tellMeVenueToAvoid(canGo, name, venue, reason) {
+        let recommendations = this.createArrayOfRecommendations();
+        let placesToAvoid = [];
+        console.log("THIS IS MY ARRAYYYYYYYYYYYYYYYYYYYYYYYYYY", recommendations);
+          for (var i of recommendations) {
+            if (i.canGo == false) {
+              var negativePlaces = {};
+              console.log("THIS I I.CANGO", i.canGo);
+              console.log("PERSON:", i.name, "PLACE:", i.venue, "REASON", i.reason)
+             negativePlaces.venue = i.venue;
+             negativePlaces.reason = i.reason;
+            placesToAvoid.push(negativePlaces);
+          }
+        }
+          return placesToAvoid
+      },
 
       canEatAndDrinkInVenue(person,venue) {
         const canEat = this.canEatInVenue(person.wont_eat, venue.food);
