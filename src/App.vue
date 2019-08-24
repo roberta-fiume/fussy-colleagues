@@ -40,6 +40,7 @@ export default {
     return {
 
       checkedNames: [], 
+      filteredArray: [],
 
         users: [
           {
@@ -140,11 +141,11 @@ export default {
   },
 
   updated() {
-    var peopleWhoCome = this.usersWhoComeObj();
-      console.log("PEOPLE WHO COMEEE", peopleWhoCome); 
+    var names = this.usersWhoComeObj();
+      console.log("PEOPLE WHO COMEEE", names); 
 
-      var selectedNames = this.selctedNames();
-      console.log("namesss",selectedNames)
+      var selctedNames = this.selctedNames();
+      console.log("namesss", selctedNames)
   },
  
   methods: {
@@ -224,19 +225,18 @@ export default {
     },
 
     selctedNames() {
-      var peopleWhoCome = this.usersWhoComeObj();
-      let newArray= [];
-      this.users.forEach(function(obj){
-        for(var i of peopleWhoCome) {
-          if(obj.name === i.name){  
-            newArray.push(obj);
-            console.log("THIS THE NEW ARRAY", newArray)
-          }
-          console.log("THIS THE NEW ARRAY 2222", newArray)
-        }       
-      });
-        return this.users = newArray;
-    },
+      let selctedNames = [];
+      var names = this.usersWhoComeObj();
+         for(var i of names) {
+            for (var j of this.users) {
+                //  const newObj = {};
+              if (j.name === i.name) {
+                selctedNames.push(j);
+              }
+            }
+         }
+         return selctedNames
+        },
 
     createRecommendationForUser(user, canEat, canDrink, venue) {
      
