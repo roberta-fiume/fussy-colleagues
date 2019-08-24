@@ -132,29 +132,32 @@ export default {
   },
 
   created() {
-    let recommendations = this.createArrayOfRecommendations();
- 
-      let placesToAvoid = this.tellMeVenueToAvoid(recommendations.canGo, recommendations.name, recommendations.venue, recommendations.reason);
-   
-     
-     console.log("THESE ARE THE PLACES TO AVOID", placesToAvoid)
+  
   },
 
   updated() {
     var names = this.usersWhoComeObj();
       console.log("PEOPLE WHO COMEEE", names); 
 
-      var selctedNames = this.selctedNames();
-      console.log("namesss", selctedNames)
+    var selectedNames = this.selectedNames();
+      console.log("namesss", selectedNames)
+
+    let recommendations = this.createArrayOfRecommendations();
+ 
+    let placesToAvoid = this.tellMeVenueToAvoid(recommendations.canGo, recommendations.name, recommendations.venue, recommendations.reason);
+   
+     
+     console.log("THESE ARE THE PLACES TO AVOID", placesToAvoid)
   },
  
   methods: {
 
     createArrayOfRecommendations() {
       let recommendations = [];
-      for(var i = 0; i < this.users.length; i++) {
+      var selectedNames = this.selectedNames();
+      for(var i = 0; i < selectedNames.length; i++) {
         for(var j = 0; j < this.venues.length; j++) {
-          recommendations.push(this.canEatAndDrinkInVenue(this.users[i],this.venues[j]));
+          recommendations.push(this.canEatAndDrinkInVenue(selectedNames[i],this.venues[j]));
         }
         
       }
@@ -206,10 +209,10 @@ export default {
           //   },
 
 
-      canEatAndDrinkInVenue(user,venue) {
-        const canEat = this.canEatInVenue(user.wont_eat, venue.food);
-        const canDrink = this.canDrinkInVenue(user.drinks, venue.drinks);
-        let recommendation = this.createRecommendationForUser(user, canEat, canDrink, venue);
+      canEatAndDrinkInVenue(person,venue) {
+        const canEat = this.canEatInVenue(person.wont_eat, venue.food);
+        const canDrink = this.canDrinkInVenue(person.drinks, venue.drinks);
+        let recommendation = this.createRecommendationForUser(person, canEat, canDrink, venue);
         return recommendation 
     },
 
@@ -224,35 +227,34 @@ export default {
         return names;  
     },
 
-    selctedNames() {
-      let selctedNames = [];
+    selectedNames() {
+      let selectedNames = [];
       var names = this.usersWhoComeObj();
          for(var i of names) {
             for (var j of this.users) {
-                //  const newObj = {};
               if (j.name === i.name) {
-                selctedNames.push(j);
+                selectedNames.push(j);
               }
             }
          }
-         return selctedNames
+         return selectedNames
         },
 
-    createRecommendationForUser(user, canEat, canDrink, venue) {
+    createRecommendationForUser(person, canEat, canDrink, venue) {
      
       let recommendation = {};
 
       recommendation.canGo = canEat && canDrink;
-      recommendation.name = `${user.name}`;
+      recommendation.name = `${person.name}`;
        recommendation.venue = `${venue.name}`;
     
       if (!recommendation.canGo) {
         if(!canEat) {
-          recommendation.reason = `Theres is nothing for ${user.name} to eat`;
+          recommendation.reason = `Theres is nothing for ${person.name} to eat`;
         } else if (!canDrink) {
-          recommendation.reason = `There is nothing for ${user.name} to drink`;
+          recommendation.reason = `There is nothing for ${person.name} to drink`;
         } else {
-          recommendation.reason = `There is nothing for ${user.name} to drink or eat`;
+          recommendation.reason = `There is nothing for ${person.name} to drink or eat`;
         }
       }
       return recommendation;
