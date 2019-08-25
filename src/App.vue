@@ -189,29 +189,7 @@ export default {
 
 
     recommendVenues() {
-      var nums = new Array(12,13,14,15)
-      var array1 = ["JULIO", "DIANA", "ROBERTA"];
-
-      var otherArray1 = array1.map(name => name.toLowerCase());
-      console.log("Im other array1", otherArray1);
-
-      // let otherArray = nums.map(element => element * 2);
-      // console.log("im the new array after map", otherArray);
-
-      // nums.forEach((val,index) => {
-      //   console.log("FOR EACHHHHHHHH", val);
-      //   if(val > 13) {
-      //     console.log("FOR EACHHHHHHHH gt 13", val);
-      //   }
-      // });
-
-
-
-
-
-
-
-
+   
         let recommendations = this.createArrayOfRecommendations();
         let placesToGo = [];
         let placesToAvoid = [];
@@ -225,7 +203,6 @@ export default {
         this.venuesToGo = placesToGo;
         this.venuesToAvoid = placesToAvoid;
       },
-
 
       recommendVenuesToAvoid(recommendation, placesToAvoid) {
         var negativePlaces = {};
@@ -304,15 +281,12 @@ export default {
     canEatInVenue(wontEat, food) {
       // const canEat = food.some(foodItem => !wontEat.includes(foodItem));
       const canEat = food.some(foodItem => !this.includesCaseInsensitive(wontEat, foodItem));
-        // para el array userWont_Eat dame ALGUN (some) elemento que no este incluido en el array venueFood
-      //  console.log(`can eat in venue ${canEat}!! because ${food} contains at least one element that is not in ${wontEat}`);
       return canEat;
     },
 
     canDrinkInVenue(userDrinks, venueDrinks) {
       // const canDrink = userDrinks.some(drinkElement => venueDrinks.includes(drinkElement));
       const canDrink = userDrinks.some(drinkElement => this.includesCaseInsensitive(venueDrinks, drinkElement));
-      // console.log(`can drink in venue ${canDrink}!! because ${venueDrinks} contains at least one element of ${userDrinks}`);
       return canDrink;
     }, 
   }
