@@ -184,17 +184,34 @@ export default {
           recommendations.push(this.canEatAndDrinkInVenue(name,venue));
         }
       }
-
-      // for(var i = 0; i < selectedNames.length; i++) {
-      //   for(var j = 0; j < this.venues.length; j++) {
-      //      recommendations.push(this.canEatAndDrinkInVenue(selectedNames[i],this.venues[j]));
-      //   } 
-      // }
       return recommendations
     },
 
 
     recommendVenues() {
+      var nums = new Array(12,13,14,15)
+      var array1 = ["JULIO", "DIANA", "ROBERTA"];
+
+      var otherArray1 = array1.map(name => name.toLowerCase());
+      console.log("Im other array1", otherArray1);
+
+      // let otherArray = nums.map(element => element * 2);
+      // console.log("im the new array after map", otherArray);
+
+      // nums.forEach((val,index) => {
+      //   console.log("FOR EACHHHHHHHH", val);
+      //   if(val > 13) {
+      //     console.log("FOR EACHHHHHHHH gt 13", val);
+      //   }
+      // });
+
+
+
+
+
+
+
+
         let recommendations = this.createArrayOfRecommendations();
         let placesToGo = [];
         let placesToAvoid = [];
@@ -225,6 +242,7 @@ export default {
       canEatAndDrinkInVenue(person,venue) {
         const canEat = this.canEatInVenue(person.wont_eat, venue.food);
         const canDrink = this.canDrinkInVenue(person.drinks, venue.drinks);
+        console.log("canEatAndDrinkInVenue", person, canEat, canDrink, venue);
         let recommendation = this.createRecommendationForUser(person, canEat, canDrink, venue);
         return recommendation 
     },
@@ -272,17 +290,28 @@ export default {
       }
       return recommendation;
     },
-    
+
+    includesCaseInsensitive(array, string) {
+      let includes = false;
+      array.some(element => {
+        if (element.toLowerCase() === string.toLowerCase()) {
+          includes = true;
+        }
+      });
+      return includes;
+    },
 
     canEatInVenue(wontEat, food) {
-          const canEat = food.some(foodItem => !wontEat.includes(foodItem));
+      // const canEat = food.some(foodItem => !wontEat.includes(foodItem));
+      const canEat = food.some(foodItem => !this.includesCaseInsensitive(wontEat, foodItem));
         // para el array userWont_Eat dame ALGUN (some) elemento que no este incluido en el array venueFood
       //  console.log(`can eat in venue ${canEat}!! because ${food} contains at least one element that is not in ${wontEat}`);
       return canEat;
     },
 
     canDrinkInVenue(userDrinks, venueDrinks) {
-      const canDrink = userDrinks.some(drinkElement => venueDrinks.includes(drinkElement));
+      // const canDrink = userDrinks.some(drinkElement => venueDrinks.includes(drinkElement));
+      const canDrink = userDrinks.some(drinkElement => this.includesCaseInsensitive(venueDrinks, drinkElement));
       // console.log(`can drink in venue ${canDrink}!! because ${venueDrinks} contains at least one element of ${userDrinks}`);
       return canDrink;
     }, 
