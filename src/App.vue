@@ -14,7 +14,7 @@
       <input type="checkbox" id="gavin" value="Gavin Coulson" v-model="checkedNames">
       <label for="gavin">Gavin Coulson</label>
 
-      <input type="checkbox" id="alan" value="Alan  Allen" v-model="checkedNames">
+      <input type="checkbox" id="alan" value="Alan Allen" v-model="checkedNames">
       <label for="allan">Alan Allen</label>
 
       <input type="checkbox" id="bobby" value="Bobby Robson" v-model="checkedNames">
@@ -26,7 +26,7 @@
       <p>People who are coming:</p>
       <div v-for="name in checkedNames"> {{name}} </div>
     
-      <button @click="tellMeVenueToAvoid(recommendations.canGo, recommendations.name, recommendations.venue,recommendations.reason)">Find venues to avoid</button>
+      <button @click="recommendVenues()">Find venues to avoid</button>
        
       <p>Places to go: </p>
       <li v-for="place in this.venuesToGo"> 
@@ -179,44 +179,48 @@ export default {
     createArrayOfRecommendations() {
       let recommendations = [];
       var selectedNames = this.selectedNames();
-      for(var i = 0; i < selectedNames.length; i++) {
-        for(var j = 0; j < this.venues.length; j++) {
-          recommendations.push(this.canEatAndDrinkInVenue(selectedNames[i],this.venues[j]));
+      for (var name of selectedNames) {
+        for (var venue of this.venues) {
+          recommendations.push(this.canEatAndDrinkInVenue(name,venue));
         }
-        
       }
+
+      // for(var i = 0; i < selectedNames.length; i++) {
+      //   for(var j = 0; j < this.venues.length; j++) {
+      //      recommendations.push(this.canEatAndDrinkInVenue(selectedNames[i],this.venues[j]));
+      //   } 
+      // }
       return recommendations
-   
     },
 
 
-    tellMeVenueToAvoid(canGo, name, venue, reason) {
+    recommendVenues() {
         let recommendations = this.createArrayOfRecommendations();
-        let placesToAvoid = [];
         let placesToGo = [];
-        console.log("THIS IS MY ARRAYYYYYYYYYYYYYYYYYYYYYYYYYY", recommendations);
-          for (var i of recommendations) {
-            if (i.canGo == false) {
-              var negativePlaces = {};
-             negativePlaces.venue = i.venue;
-             negativePlaces.reason = i.reason;
-            placesToAvoid.push(negativePlaces);
-              // this.venuesToAvoid = placesToAvoid;
-              console.log("THESE ARE THE PLACES TO AVOID", placesToAvoid);
+        let placesToAvoid = [];
+          for (var recommendation of recommendations) {
+            if (recommendation.canGo) {
+              this.recommendVenuesToGo(recommendation, placesToGo);
             } else {
-              placesToGo.push(i.venue);
+              this.recommendVenuesToAvoid(recommendation, placesToAvoid);
             }
         } 
-        this.venuesToAvoid = placesToAvoid;
         this.venuesToGo = placesToGo;
-              console.log("THESE ARE THE PLACES TO AVOID", this.venuesToAvoid);
+        this.venuesToAvoid = placesToAvoid;
       },
 
-      // printPlacedtoAvoid() {
-      //   let placesToAvoid = tellMeVenueToAvoid(recommendations.canGo, recommendations.name, recommendations.venue,recommendations.reason);
-      //   this.venuesToAvoid = placesToAvoid;
-      //   console.log("THESE ARE THE VENUES TO AVOIIIIIIIDDDD", this.venuesToAvoid)
-      // },
+
+      recommendVenuesToAvoid(recommendation, placesToAvoid) {
+        var negativePlaces = {};
+        negativePlaces.venue = recommendation.venue;
+        negativePlaces.reason = recommendation.reason;
+        placesToAvoid.push(negativePlaces);
+        console.log("THESE ARE THE PLACES TO AVOID", placesToAvoid);
+      },
+
+      recommendVenuesToGo(recommendation, placesToGo) {
+        placesToGo.push(recommendation.venue);
+      },
 
       canEatAndDrinkInVenue(person,venue) {
         const canEat = this.canEatInVenue(person.wont_eat, venue.food);
