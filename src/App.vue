@@ -4,23 +4,41 @@
       <div id='example-3'>
       <input type="checkbox" id="john" value="John Davis" v-model="checkedNames">
       <label for="john">John Davis</label>
+
       <input type="checkbox" id="gary" value="Gary Jones" v-model="checkedNames">
       <label for="gary">Gary Jones</label>
+
       <input type="checkbox" id="robert" value="Robert Webb" v-model="checkedNames">
       <label for="robert">Robert Webb</label>
+
       <input type="checkbox" id="gavin" value="Gavin Coulson" v-model="checkedNames">
       <label for="gavin">Gavin Coulson</label>
+
       <input type="checkbox" id="alan" value="Alan  Allen" v-model="checkedNames">
       <label for="allan">Alan Allen</label>
+
       <input type="checkbox" id="bobby" value="Bobby Robson" v-model="checkedNames">
       <label for="bobby">Bobby Robson</label>
+
       <input type="checkbox" id="david" value="David Lang" v-model="checkedNames">
       <label for="david">David Lang</label>
       <br>
       <p>People who are coming:</p>
       <div v-for="name in checkedNames"> {{name}} </div>
     
-      <button>Find venues to avoid</button>
+      <button @click="tellMeVenueToAvoid(recommendations.canGo, recommendations.name, recommendations.venue,recommendations.reason)">Find venues to avoid</button>
+       
+      <p>Places to go: </p>
+      <li v-for="place in this.venuesToGo"> 
+        {{place}} 
+      </li>
+
+      <p>Places to avoid: </p>
+      <li v-for="place in this.venuesToAvoid"> 
+        {{place.venue}} : {{place.reason}}
+      </li>
+       
+
 
       <div></div>
     </div>
@@ -41,7 +59,10 @@ export default {
 
       checkedNames: [], 
       filteredArray: [],
-
+      recommendations: "",
+      venuesToAvoid: "",
+      venuesToGo: "",
+    
         users: [
           {
               "name": "John Davis",
@@ -136,9 +157,21 @@ export default {
       console.log("PEOPLE WHO COMEEE", names); 
     var selectedNames = this.selectedNames();
       console.log("namesss", selectedNames)
-    let recommendations = this.createArrayOfRecommendations();
-    let placesToAvoid = this.tellMeVenueToAvoid(recommendations.canGo, recommendations.name, recommendations.venue, recommendations.reason);
-     console.log("THESE ARE THE PLACES TO AVOID", placesToAvoid)
+
+  },
+
+  watch: {
+    recommendations() {
+      this.recommendations =  this.createArrayOfRecommendations();
+    },
+
+    venuesToAvoid() {
+      console.log("I AM CHANGEDDDDDD", this.venuesToAvoid)
+    },
+
+    venuesToGo() {
+         console.log("I AM PLECES TO GO", this.venuesToGo);
+    }
   },
  
   methods: {
@@ -160,19 +193,30 @@ export default {
     tellMeVenueToAvoid(canGo, name, venue, reason) {
         let recommendations = this.createArrayOfRecommendations();
         let placesToAvoid = [];
+        let placesToGo = [];
         console.log("THIS IS MY ARRAYYYYYYYYYYYYYYYYYYYYYYYYYY", recommendations);
           for (var i of recommendations) {
             if (i.canGo == false) {
               var negativePlaces = {};
-              console.log("THIS I I.CANGO", i.canGo);
-              console.log("PERSON:", i.name, "PLACE:", i.venue, "REASON", i.reason)
              negativePlaces.venue = i.venue;
              negativePlaces.reason = i.reason;
             placesToAvoid.push(negativePlaces);
-          }
-        }
-          return placesToAvoid
+              // this.venuesToAvoid = placesToAvoid;
+              console.log("THESE ARE THE PLACES TO AVOID", placesToAvoid);
+            } else {
+              placesToGo.push(i.venue);
+            }
+        } 
+        this.venuesToAvoid = placesToAvoid;
+        this.venuesToGo = placesToGo;
+              console.log("THESE ARE THE PLACES TO AVOID", this.venuesToAvoid);
       },
+
+      // printPlacedtoAvoid() {
+      //   let placesToAvoid = tellMeVenueToAvoid(recommendations.canGo, recommendations.name, recommendations.venue,recommendations.reason);
+      //   this.venuesToAvoid = placesToAvoid;
+      //   console.log("THESE ARE THE VENUES TO AVOIIIIIIIDDDD", this.venuesToAvoid)
+      // },
 
       canEatAndDrinkInVenue(person,venue) {
         const canEat = this.canEatInVenue(person.wont_eat, venue.food);
