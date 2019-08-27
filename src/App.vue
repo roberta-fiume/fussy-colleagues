@@ -262,16 +262,16 @@ export default {
         this.result =  true
       },
 
-      recommendVenuesToAvoid(recommendation, placesToAvoid) {
-        var negativePlaces = {};
-        negativePlaces.venue = recommendation.venue;
-        negativePlaces.reason = recommendation.reason;
-        placesToAvoid.push(negativePlaces);
-      },
+    recommendVenuesToGo(recommendation, placesToGo) {
+      placesToGo.push(recommendation.venue);
+    },
 
-      recommendVenuesToGo(recommendation, placesToGo) {
-        placesToGo.push(recommendation.venue);
-      },
+    recommendVenuesToAvoid(recommendation, placesToAvoid) {
+      var negativePlaces = {};
+      negativePlaces.venue = recommendation.venue;
+      negativePlaces.reason = recommendation.reason;
+      placesToAvoid.push(negativePlaces);
+    }  
   }
 }
 
